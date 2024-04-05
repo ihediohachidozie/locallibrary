@@ -3,3 +3,14 @@
     padding: 0;
     list-style: none;
 }
+.sidebar-nav hr {
+    width: 50%;
+    padding-top: 5px
+}
+#logout-form {
+    display: inline;
+}
+#logout-form button {
+    padding: 0;
+    margin: 0;
+}
