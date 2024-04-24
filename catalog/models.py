@@ -78,6 +78,9 @@ class Book(models.Model):
         Genre, help_text="Select a genre for this book")
     language = models.ForeignKey(Language, on_delete=models.RESTRICT, null=True)
 
+    class Meta:
+        ordering = ['title']
+
     def __str__(self):
         """String for representing the Model object."""
         return self.title
