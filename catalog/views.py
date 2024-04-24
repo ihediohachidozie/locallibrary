@@ -58,7 +58,7 @@ class BookListView(generic.ListView):
 
     # queryset = Book.objects.filter(title__incontains='war')[:5]  # Get 5 books containing the title war
     template_name = 'book_list.html'  # Specify your own template name/location
-    paginate_by = 2
+    paginate_by = 10
 
 
 class BookDetailView(generic.DetailView):
@@ -74,7 +74,7 @@ class AuthorListView(generic.ListView):
         return Author.objects.all()  # Get all author
 
     template_name = 'author_list.html'  # Specify the template name
-    paginate_by = 2
+    paginate_by = 10
 
 
 class AuthorDetailView(generic.DetailView):

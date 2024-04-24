@@ -24,6 +24,15 @@ class Language(models.Model):
         """Return the url to access a particular language instance."""
         return reverse('language-detail', args=[str(self.id)])
 
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                Lower('name'),
+                name='language_name_case_insensitive_unique',
+                violation_error_message="Language already exists (case insensitive match)"
+            ),
+        ]
+
 
 class Genre(models.Model):
     """Model representing a book genre."""
@@ -61,9 +70,10 @@ class Book(models.Model):
         max_length=1000, help_text="Enter a brief description of the book")
     isbn = models.CharField('ISBN', max_length=13,
                             unique=True,
-                            help_text='13 Character <a href="https://www.isbn-international.org/content/what-isbn">ISBN number </a>')
+                            help_text='13 Character <a href="https://www.isbn-international.org/content/what-isbn'
+                                      '">ISBN number </a>')
     # ManyToManyField used because genre can contain many books. Books can cover many genres.
-    # Genre class has already been defined so we can specify the object above.
+    # Genre class has already been defined, so we can specify the object above.
     genre = models.ManyToManyField(
         Genre, help_text="Select a genre for this book")
     language = models.ForeignKey(Language, on_delete=models.RESTRICT, null=True)
@@ -126,10 +136,17 @@ class Author(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     date_of_birth = models.DateField(null=True, blank=True)
-    date_of_death = models.DateField('Died', null=True, blank=True)
+    date_of_death = models.DateField('died', null=True, blank=True)
 
     class Meta:
         ordering = ['last_name', 'first_name']
+        constraints = [
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_date_of_death_gt_date_of_birth",
+                check=models.Q(date_of_death__gt=models.F("date_of_birth")),
+                violation_error_message='Date of birth cannot be greater than date of death'
+            )
+        ]
 
     def get_absolute_url(self):
         """Returns the URL to access a particular author instance."""
